@@ -6,15 +6,19 @@ st.set_page_config(page_title="ClearGov AP", layout="centered")
 language = st.radio("Language / భాష", ["English", "తెలుగు"], horizontal=True)
 lang = "en" if language == "English" else "te"
 
-# App content
+# ---------------- CONTENT ----------------
+
 content = {
     "title": {"en": "ClearGov AP", "te": "క్లియర్ గవ్ ఏపీ"},
     "subtitle": {
         "en": "Clear guidance for Andhra Pradesh government certificates",
         "te": "ఆంధ్రప్రదేశ్ ప్రభుత్వ ధృవీకరణ పత్రాల కోసం స్పష్టమైన మార్గదర్శకం"
     },
+    "certificates": {
+        "income": {"en": "Income Certificate", "te": "ఆదాయ ధృవీకరణ పత్రం"},
+        "residence": {"en": "Residence Certificate (Coming Soon)", "te": "నివాస ధృవీకరణ పత్రం (త్వరలో)"}
+    },
     "income": {
-        "name": {"en": "Income Certificate", "te": "ఆదాయ ధృవీకరణ పత్రం"},
         "what": {
             "en": "An Income Certificate is an official document issued by the Government of Andhra Pradesh showing a family’s annual income.",
             "te": "ఆదాయ ధృవీకరణ పత్రం అనేది ఆంధ్రప్రదేశ్ ప్రభుత్వం జారీ చేసే అధికారిక పత్రం. ఇది కుటుంబం యొక్క వార్షిక ఆదాయాన్ని చూపిస్తుంది."
@@ -46,20 +50,40 @@ content = {
     }
 }
 
-# UI rendering
+# ---------------- UI ----------------
+
 st.title(content["title"][lang])
 st.caption(content["subtitle"][lang])
 st.divider()
 
-st.header(content["income"]["name"][lang])
-st.write(content["income"]["what"][lang])
+# Certificate selection
+st.subheader("Select a Certificate" if lang == "en" else "ధృవీకరణ పత్రాన్ని ఎంచుకోండి")
 
-st.subheader("Step-by-step process" if lang == "en" else "దశల వారీ ప్రక్రియ")
-for i, step in enumerate(content["income"]["steps"][lang], start=1):
-    st.write(f"{i}. {step}")
+certificate_key = st.selectbox(
+    "",
+    options=list(content["certificates"].keys()),
+    format_func=lambda x: content["certificates"][x][lang]
+)
+
+st.divider()
+
+# Show Income Certificate
+if certificate_key == "income":
+    st.header(content["certificates"]["income"][lang])
+    st.write(content["income"]["what"][lang])
+
+    st.subheader("Step-by-step process" if lang == "en" else "దశల వారీ ప్రక్రియ")
+    for i, step in enumerate(content["income"]["steps"][lang], start=1):
+        st.write(f"{i}. {step}")
+
+# Coming soon placeholder
+if certificate_key == "residence":
+    st.info(
+        "This certificate will be added soon."
+        if lang == "en"
+        else "ఈ ధృవీకరణ పత్రం త్వరలో చేర్చబడుతుంది."
+    )
 
 st.divider()
 st.caption(content["disclaimer"][lang])
-
-
 
